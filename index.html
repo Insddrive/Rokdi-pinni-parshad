@@ -92,17 +92,15 @@
             text-align: right;
             border: 1px solid #ccc;
             border-radius: 6px;
-            color: #000; /* ਅੱਖਰਾਂ ਦਾ ਰੰਗ ਕਾਲਾ */
+            color: #000;
         }
-        
-        /* ਲਾਕ ਹੋਣ 'ਤੇ ਇਨਪੁਟ ਦਾ ਰੰਗ (ਫਿੱਕਾ ਨਾ ਪੈਣ ਦੇਣ ਲਈ ਕੋਡ) */
         input[type="number"]:disabled {
-            background-color: #f9f9f9; /* ਬੈਕਗ੍ਰਾਊਂਡ ਥੋੜ੍ਹਾ ਜਿਹਾ ਸਫੈਦ ਰਹੇਗਾ */
-            color: #000; /* ਅੱਖਰ ਬਿਲਕੁਲ ਕਾਲੇ ਰਹਿਣਗੇ */
-            -webkit-text-fill-color: #000; /* ਮੋਬਾਈਲ ਬ੍ਰਾਊਜ਼ਰਾਂ ਲਈ ਜ਼ਰੂਰੀ */
-            opacity: 1; /* ਫਿੱਕਾਪਨ ਖਤਮ ਕਰਨ ਲਈ */
+            background-color: #f9f9f9;
+            color: #000;
+            -webkit-text-fill-color: #000;
+            opacity: 1;
             border-color: #bdc3c7;
-            font-weight: bold; /* ਪੜ੍ਹਨ ਵਿੱਚ ਆਸਾਨੀ ਲਈ ਅੱਖਰ ਗੂੜ੍ਹੇ */
+            font-weight: bold;
             cursor: not-allowed;
         }
 
@@ -193,6 +191,29 @@
         .clear-btn:hover {
             background-color: #c0392b;
         }
+
+        /* ਐਰਰ / ਵਾਰਨਿੰਗ ਦਾ ਡਿਜ਼ਾਈਨ */
+        .error-msg {
+            color: #e74c3c;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 5px;
+            display: none; /* ਡਿਫਾਲਟ ਛੁਪਿਆ ਹੋਇਆ */
+        }
+        .total-error-msg {
+            color: #e74c3c;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            background-color: #fadbd8;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #e74c3c;
+            display: none; /* ਡਿਫਾਲਟ ਛੁਪਿਆ ਹੋਇਆ */
+        }
+
     </style>
 </head>
 <body>
@@ -226,6 +247,7 @@
 
         <div class="detail-row">
             <div class="row"><label>ਵੇਰਵਾ ਪੈਕਟ -</label> <input type="number" id="pkt" oninput="calculate()"></div>
+            <div id="pktError" class="error-msg">⚠️ ਰਕਮ 20 ਨਾਲ ਪੂਰੀ ਨਹੀਂ ਵੰਡੀ ਜਾ ਰਹੀ!</div>
             <div class="fraction-container">
                 <div class="fraction">
                     <span class="numerator" id="pktNum">0</span>
@@ -239,6 +261,7 @@
 
         <div class="detail-row">
             <div class="row"><label>ਵੇਰਵਾ ਸਿਰੋਪਾਓ -</label> <input type="number" id="sir" oninput="calculate()"></div>
+            <div id="sirError" class="error-msg">⚠️ ਰਕਮ 151 ਨਾਲ ਪੂਰੀ ਨਹੀਂ ਵੰਡੀ ਜਾ ਰਹੀ!</div>
             <div class="fraction-container">
                 <div class="fraction">
                     <span class="numerator" id="sirNum">0</span>
@@ -253,6 +276,10 @@
         <div class="grand-total-box">
             <div class="grand-total-label">ਪੰਜਾਂ ਪਰਚਿਆਂ ਦਾ ਇਕੱਠਾ ਜੋੜ</div>
             <div class="grand-total-value" id="grandTotal">0</div>
+        </div>
+        
+        <div id="totalError" class="total-error-msg">
+            ⚠️ ਧਿਆਨ ਦਿਓ: ਵੇਰਵਾ ਪੈਕਟ ਅਤੇ ਸਿਰੋਪਾਓ ਦਾ ਕੁੱਲ ਜੋੜ, ਪੰਜਾਂ ਪਰਚੀਆਂ ਦੇ ਕੁੱਲ ਜੋੜ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ!
         </div>
 
         <button class="clear-btn" onclick="clearData()">ਸਾਰਾ ਡਾਟਾ ਕਲੀਅਰ ਕਰੋ</button>
@@ -302,6 +329,7 @@
             let pkt = Number(pktInput) || 0;
             let sir = Number(sirInput) || 0;
 
+            // ਜੋੜ ਕੱਢਣਾ
             let sum1 = v1 + v2 + v3;
             document.getElementById('sum1').innerText = sum1;
 
@@ -311,13 +339,33 @@
 
             document.getElementById('grandTotal').innerText = sum2;
 
-            let pktDiv = Math.round(pkt / 20);
+            // ਵੇਰਵਾ ਪੈਕਟ ਚੈੱਕ (20 ਨਾਲ ਭਾਗ)
+            if (pkt > 0 && pkt % 20 !== 0) {
+                document.getElementById('pktError').style.display = 'block';
+            } else {
+                document.getElementById('pktError').style.display = 'none';
+            }
+            let pktDiv = Math.floor(pkt / 20); // ਐਰਰ ਆਉਣ 'ਤੇ ਵੀ ਪੂਰਨ ਅੰਕ ਹੀ ਦਿਖਾਏਗਾ
             document.getElementById('pktNum').innerText = pkt;
             document.getElementById('pktResultAns').innerText = pktDiv;
 
-            let sirDiv = Math.round(sir / 151);
+            // ਵੇਰਵਾ ਸਿਰੋਪਾਓ ਚੈੱਕ (151 ਨਾਲ ਭਾਗ)
+            if (sir > 0 && sir % 151 !== 0) {
+                document.getElementById('sirError').style.display = 'block';
+            } else {
+                document.getElementById('sirError').style.display = 'none';
+            }
+            let sirDiv = Math.floor(sir / 151);
             document.getElementById('sirNum').innerText = sir;
             document.getElementById('sirResultAns').innerText = sirDiv;
+
+            // ਕੁੱਲ ਜੋੜ ਮੈਚ ਕਰਨ ਦਾ ਚੈੱਕ
+            // ਜੇਕਰ ਪੈਕਟ ਜਾਂ ਸਿਰੋਪਾਓ ਵਿੱਚ ਕੁਝ ਭਰਿਆ ਹੈ, ਪਰ ਉਹਨਾਂ ਦਾ ਜੋੜ ਕੁੱਲ ਪਰਚੀਆਂ ਦੇ ਜੋੜ ਬਰਾਬਰ ਨਹੀਂ ਹੈ
+            if ((pkt > 0 || sir > 0) && (pkt + sir !== sum2)) {
+                document.getElementById('totalError').style.display = 'block';
+            } else {
+                document.getElementById('totalError').style.display = 'none';
+            }
         }
 
         function toggleLock() {
