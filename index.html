@@ -236,7 +236,6 @@
             </div>
         </div>
 
-        <!-- ਭਾਗ 1 -->
         <div class="row"><label>ਪਹਿਲੀ ਪਰਚੀ -</label> <input type="number" id="p1" oninput="calculate()"></div>
         <div class="row"><label>ਦੂਜੀ ਪਰਚੀ -</label> <input type="number" id="p2" oninput="calculate()"></div>
         <div class="row"><label>ਤੀਜੀ ਪਰਚੀ -</label> <input type="number" id="p3" oninput="calculate()"></div>
@@ -244,7 +243,6 @@
 
         <div class="extra-space-divider"></div>
 
-        <!-- ਭਾਗ 2 -->
         <div class="row"><label>ਪਿਛਲਾ ਜੋੜ -</label> <span class="result-text" id="prevSum">0</span></div>
         <div class="row"><label>ਚੌਥੀ ਪਰਚੀ -</label> <input type="number" id="p4" oninput="calculate()"></div>
         <div class="row"><label>ਪੰਜਵੀਂ ਪਰਚੀ -</label> <input type="number" id="p5" oninput="calculate()"></div>
@@ -252,7 +250,6 @@
 
         <div class="divider"></div>
 
-        <!-- ਭਾਗ 3 -->
         <div class="detail-row">
             <div class="row"><label>ਵੇਰਵਾ ਪੈਕਟ -</label> <input type="number" id="pkt" oninput="calculate()"></div>
             <div id="pktError" class="error-msg">⚠️ ਰਕਮ 20 ਨਾਲ ਪੂਰੀ ਨਹੀਂ ਵੰਡੀ ਜਾ ਰਹੀ!</div>
@@ -267,7 +264,6 @@
 
         <div class="divider"></div>
 
-        <!-- ਭਾਗ 4 -->
         <div class="detail-row">
             <div class="row"><label>ਵੇਰਵਾ ਸਿਰੋਪਾਓ -</label> <input type="number" id="sir" oninput="calculate()"></div>
             <div id="sirError" class="error-msg">⚠️ ਰਕਮ 151 ਨਾਲ ਪੂਰੀ ਨਹੀਂ ਵੰਡੀ ਜਾ ਰਹੀ!</div>
@@ -290,7 +286,6 @@
 
         <div class="divider"></div>
 
-        <!-- ਭਾਗ 5 -->
         <div class="grand-total-box">
             <div class="grand-total-label">ਪੰਜਾਂ ਪਰਚਿਆਂ ਦਾ ਇਕੱਠਾ ਜੋੜ</div>
             <div class="grand-total-value" id="grandTotal">0</div>
@@ -347,14 +342,15 @@
             let pkt = Number(pktInput) || 0;
             let sir = Number(sirInput) || 0;
 
+            // ਆਮ ਜੋੜ (ਬਿਨਾਂ ਕੌਮਿਆਂ ਦੇ)
             let sum1 = v1 + v2 + v3;
-            document.getElementById('sum1').innerText = sum1.toLocaleString('en-IN');
+            document.getElementById('sum1').innerText = sum1;
 
-            document.getElementById('prevSum').innerText = sum1.toLocaleString('en-IN');
+            document.getElementById('prevSum').innerText = sum1;
             let sum2 = sum1 + v4 + v5;
-            document.getElementById('sum2').innerText = sum2.toLocaleString('en-IN');
+            document.getElementById('sum2').innerText = sum2;
 
-            // ਅਖੀਰਲੇ ਕੁੱਲ ਜੋੜ ਵਿੱਚ ਕੌਮੇ (Commas) ਲਗਾਉਣਾ
+            // ਸਿਰਫ ਅਖੀਰਲੇ ਕੁੱਲ ਜੋੜ ਵਿੱਚ ਕੌਮੇ (Commas) ਲਗਾਉਣਾ
             document.getElementById('grandTotal').innerText = sum2.toLocaleString('en-IN');
 
             if (pkt > 0 && pkt % 20 !== 0) {
@@ -363,8 +359,9 @@
                 document.getElementById('pktError').style.display = 'none';
             }
             let pktDiv = Math.floor(pkt / 20); 
-            document.getElementById('pktNum').innerText = pkt.toLocaleString('en-IN');
-            document.getElementById('pktResultAns').innerText = pktDiv.toLocaleString('en-IN');
+            // ਆਮ ਰਕਮਾਂ (ਬਿਨਾਂ ਕੌਮਿਆਂ ਦੇ)
+            document.getElementById('pktNum').innerText = pkt;
+            document.getElementById('pktResultAns').innerText = pktDiv;
 
             if (sir > 0 && sir % 151 !== 0) {
                 document.getElementById('sirError').style.display = 'block';
@@ -372,13 +369,15 @@
                 document.getElementById('sirError').style.display = 'none';
             }
             let sirDiv = Math.floor(sir / 151);
-            document.getElementById('sirNum').innerText = sir.toLocaleString('en-IN');
-            document.getElementById('sirResultAns').innerText = sirDiv.toLocaleString('en-IN');
+            // ਆਮ ਰਕਮਾਂ (ਬਿਨਾਂ ਕੌਮਿਆਂ ਦੇ)
+            document.getElementById('sirNum').innerText = sir;
+            document.getElementById('sirResultAns').innerText = sirDiv;
 
             let vattakTotalSum = pkt + sir;
-            document.getElementById('vattakPkt').innerText = pkt.toLocaleString('en-IN');
-            document.getElementById('vattakSir').innerText = sir.toLocaleString('en-IN');
-            document.getElementById('vattakTotal').innerText = vattakTotalSum.toLocaleString('en-IN');
+            // ਆਮ ਰਕਮਾਂ (ਬਿਨਾਂ ਕੌਮਿਆਂ ਦੇ)
+            document.getElementById('vattakPkt').innerText = pkt;
+            document.getElementById('vattakSir').innerText = sir;
+            document.getElementById('vattakTotal').innerText = vattakTotalSum;
 
             if ((pkt > 0 || sir > 0) && (vattakTotalSum !== sum2)) {
                 document.getElementById('totalError').style.display = 'block';
