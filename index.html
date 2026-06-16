@@ -181,6 +181,15 @@
             margin-top: 10px;
         }
 
+        /* ਤਰੀਕ ਦਾ ਡਿਜ਼ਾਈਨ */
+        .date-display {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+
         .clear-btn {
             background-color: #e74c3c;
             color: white;
@@ -291,6 +300,8 @@
             <div class="grand-total-value" id="grandTotal">0</div>
         </div>
         
+        <div class="date-display" id="currentDate"></div>
+
         <div id="totalError" class="total-error-msg">
             ⚠️ ਧਿਆਨ ਦਿਓ: ਵੇਰਵਾ ਪੈਕਟ ਅਤੇ ਸਿਰੋਪਾਓ ਦਾ ਕੁੱਲ ਜੋੜ, ਪੰਜਾਂ ਪਰਚੀਆਂ ਦੇ ਕੁੱਲ ਜੋੜ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ!
         </div>
@@ -301,6 +312,7 @@
 
     <script>
         window.onload = function() {
+            // ਡਾਟਾ ਲੋਡ ਕਰਨਾ
             document.getElementById('p1').value = localStorage.getItem('p1') || '';
             document.getElementById('p2').value = localStorage.getItem('p2') || '';
             document.getElementById('p3').value = localStorage.getItem('p3') || '';
@@ -309,6 +321,14 @@
             document.getElementById('pkt').value = localStorage.getItem('pkt') || '';
             document.getElementById('sir').value = localStorage.getItem('sir') || '';
             
+            // ਤਰੀਕ ਸੈੱਟ ਕਰਨਾ
+            let today = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); // ਜਨਵਰੀ 0 ਹੁੰਦਾ ਹੈ
+            let yyyy = today.getFullYear();
+            let formattedDate = dd + '/' + mm + '/' + yyyy;
+            document.getElementById('currentDate').innerText = "ਮਿਤੀ: " + formattedDate;
+
             let isLocked = localStorage.getItem('isLocked') === 'true';
             document.getElementById('lockToggle').checked = isLocked;
             toggleLock(); 
@@ -342,7 +362,6 @@
             let pkt = Number(pktInput) || 0;
             let sir = Number(sirInput) || 0;
 
-            // ਆਮ ਜੋੜ (ਬਿਨਾਂ ਕੌਮਿਆਂ ਦੇ)
             let sum1 = v1 + v2 + v3;
             document.getElementById('sum1').innerText = sum1;
 
@@ -350,7 +369,6 @@
             let sum2 = sum1 + v4 + v5;
             document.getElementById('sum2').innerText = sum2;
 
-            // ਸਿਰਫ ਅਖੀਰਲੇ ਕੁੱਲ ਜੋੜ ਵਿੱਚ ਕੌਮੇ (Commas) ਲਗਾਉਣਾ
             document.getElementById('grandTotal').innerText = sum2.toLocaleString('en-IN');
 
             if (pkt > 0 && pkt % 20 !== 0) {
@@ -359,7 +377,6 @@
                 document.getElementById('pktError').style.display = 'none';
             }
             let pktDiv = Math.floor(pkt / 20); 
-            // ਆਮ ਰਕਮਾਂ (ਬਿਨਾਂ ਕੌਮਿਆਂ ਦੇ)
             document.getElementById('pktNum').innerText = pkt;
             document.getElementById('pktResultAns').innerText = pktDiv;
 
@@ -369,12 +386,10 @@
                 document.getElementById('sirError').style.display = 'none';
             }
             let sirDiv = Math.floor(sir / 151);
-            // ਆਮ ਰਕਮਾਂ (ਬਿਨਾਂ ਕੌਮਿਆਂ ਦੇ)
             document.getElementById('sirNum').innerText = sir;
             document.getElementById('sirResultAns').innerText = sirDiv;
 
             let vattakTotalSum = pkt + sir;
-            // ਆਮ ਰਕਮਾਂ (ਬਿਨਾਂ ਕੌਮਿਆਂ ਦੇ)
             document.getElementById('vattakPkt').innerText = pkt;
             document.getElementById('vattakSir').innerText = sir;
             document.getElementById('vattakTotal').innerText = vattakTotalSum;
