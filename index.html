@@ -122,6 +122,13 @@
             margin: 90px 0; 
         }
 
+        /* ਨਵੇਂ ਭਾਗ ਲਈ ਸਪੇਸ */
+        .medium-space-divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 45px 0; 
+        }
+
         .detail-row {
             margin-bottom: 20px;
         }
@@ -192,14 +199,13 @@
             background-color: #c0392b;
         }
 
-        /* ਐਰਰ / ਵਾਰਨਿੰਗ ਦਾ ਡਿਜ਼ਾਈਨ */
         .error-msg {
             color: #e74c3c;
             font-size: 14px;
             font-weight: bold;
             text-align: right;
             margin-top: 5px;
-            display: none; /* ਡਿਫਾਲਟ ਛੁਪਿਆ ਹੋਇਆ */
+            display: none; 
         }
         .total-error-msg {
             color: #e74c3c;
@@ -211,7 +217,7 @@
             padding: 10px;
             border-radius: 6px;
             border: 1px solid #e74c3c;
-            display: none; /* ਡਿਫਾਲਟ ਛੁਪਿਆ ਹੋਇਆ */
+            display: none; 
         }
 
     </style>
@@ -269,6 +275,14 @@
                 </div>
                 <div class="equals-result">= &nbsp; <span id="sirResultAns">0</span></div>
             </div>
+        </div>
+
+        <div class="medium-space-divider"></div>
+
+        <div class="detail-row">
+            <div class="row"><label>ਵੱਟਕ ਪਿੰਨੀ ਪ੍ਰਸ਼ਾਦ -</label> <span class="result-text" id="vattakPkt">0</span></div>
+            <div class="row"><label>ਵੱਟਕ ਸਿਰੋਪਾਓ -</label> <span class="result-text" id="vattakSir">0</span></div>
+            <div class="row"><label>ਕੁੱਲ ਜੋੜ -</label> <span class="result-text" id="vattakTotal">0</span></div>
         </div>
 
         <div class="divider"></div>
@@ -329,7 +343,6 @@
             let pkt = Number(pktInput) || 0;
             let sir = Number(sirInput) || 0;
 
-            // ਜੋੜ ਕੱਢਣਾ
             let sum1 = v1 + v2 + v3;
             document.getElementById('sum1').innerText = sum1;
 
@@ -339,17 +352,15 @@
 
             document.getElementById('grandTotal').innerText = sum2;
 
-            // ਵੇਰਵਾ ਪੈਕਟ ਚੈੱਕ (20 ਨਾਲ ਭਾਗ)
             if (pkt > 0 && pkt % 20 !== 0) {
                 document.getElementById('pktError').style.display = 'block';
             } else {
                 document.getElementById('pktError').style.display = 'none';
             }
-            let pktDiv = Math.floor(pkt / 20); // ਐਰਰ ਆਉਣ 'ਤੇ ਵੀ ਪੂਰਨ ਅੰਕ ਹੀ ਦਿਖਾਏਗਾ
+            let pktDiv = Math.floor(pkt / 20); 
             document.getElementById('pktNum').innerText = pkt;
             document.getElementById('pktResultAns').innerText = pktDiv;
 
-            // ਵੇਰਵਾ ਸਿਰੋਪਾਓ ਚੈੱਕ (151 ਨਾਲ ਭਾਗ)
             if (sir > 0 && sir % 151 !== 0) {
                 document.getElementById('sirError').style.display = 'block';
             } else {
@@ -359,9 +370,13 @@
             document.getElementById('sirNum').innerText = sir;
             document.getElementById('sirResultAns').innerText = sirDiv;
 
-            // ਕੁੱਲ ਜੋੜ ਮੈਚ ਕਰਨ ਦਾ ਚੈੱਕ
-            // ਜੇਕਰ ਪੈਕਟ ਜਾਂ ਸਿਰੋਪਾਓ ਵਿੱਚ ਕੁਝ ਭਰਿਆ ਹੈ, ਪਰ ਉਹਨਾਂ ਦਾ ਜੋੜ ਕੁੱਲ ਪਰਚੀਆਂ ਦੇ ਜੋੜ ਬਰਾਬਰ ਨਹੀਂ ਹੈ
-            if ((pkt > 0 || sir > 0) && (pkt + sir !== sum2)) {
+            // ਨਵਾਂ ਹਿੱਸਾ: ਵੱਟਕ ਪਿੰਨੀ ਪ੍ਰਸ਼ਾਦ ਅਤੇ ਸਿਰੋਪਾਓ ਦਾ ਹਿਸਾਬ
+            let vattakTotalSum = pkt + sir;
+            document.getElementById('vattakPkt').innerText = pkt;
+            document.getElementById('vattakSir').innerText = sir;
+            document.getElementById('vattakTotal').innerText = vattakTotalSum;
+
+            if ((pkt > 0 || sir > 0) && (vattakTotalSum !== sum2)) {
                 document.getElementById('totalError').style.display = 'block';
             } else {
                 document.getElementById('totalError').style.display = 'none';
