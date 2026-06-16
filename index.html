@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rokdi pinni Parshad</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            max-width: 450px;
+            margin: auto;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        h2 {
+            color: #333;
+            margin: 0;
+        }
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #c0392b;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #e74c3c;
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        input[type="number"] {
+            width: 120px;
+            padding: 8px;
+            font-size: 16px;
+            text-align: right;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            color: #000; /* ਅੱਖਰਾਂ ਦਾ ਰੰਗ ਕਾਲਾ */
+        }
+        
+        /* ਲਾਕ ਹੋਣ 'ਤੇ ਇਨਪੁਟ ਦਾ ਰੰਗ (ਫਿੱਕਾ ਨਾ ਪੈਣ ਦੇਣ ਲਈ ਕੋਡ) */
+        input[type="number"]:disabled {
+            background-color: #f9f9f9; /* ਬੈਕਗ੍ਰਾਊਂਡ ਥੋੜ੍ਹਾ ਜਿਹਾ ਸਫੈਦ ਰਹੇਗਾ */
+            color: #000; /* ਅੱਖਰ ਬਿਲਕੁਲ ਕਾਲੇ ਰਹਿਣਗੇ */
+            -webkit-text-fill-color: #000; /* ਮੋਬਾਈਲ ਬ੍ਰਾਊਜ਼ਰਾਂ ਲਈ ਜ਼ਰੂਰੀ */
+            opacity: 1; /* ਫਿੱਕਾਪਨ ਖਤਮ ਕਰਨ ਲਈ */
+            border-color: #bdc3c7;
+            font-weight: bold; /* ਪੜ੍ਹਨ ਵਿੱਚ ਆਸਾਨੀ ਲਈ ਅੱਖਰ ਗੂੜ੍ਹੇ */
+            cursor: not-allowed;
+        }
+
+        .result-text {
+            font-weight: bold;
+            color: #d35400;
+            font-size: 18px;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 25px 0;
+        }
+        
+        .extra-space-divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 90px 0; 
+        }
+
+        .detail-row {
+            margin-bottom: 20px;
+        }
+        
+        .fraction-container {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2980b9;
+            margin-top: 10px;
+            padding-left: 10px;
+        }
+        .fraction {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .numerator {
+            border-bottom: 2px solid #2980b9;
+            padding: 0 10px;
+            line-height: 1.4;
+        }
+        .denominator {
+            padding: 0 10px;
+            line-height: 1.4;
+        }
+        .equals-result {
+            display: flex;
+            align-items: center;
+        }
+
+        .grand-total-box {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-radius: 8px;
+            border: 2px solid #1abc9c;
+        }
+        .grand-total-label {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+        .grand-total-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #c0392b;
+            margin-top: 10px;
+        }
+
+        .clear-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: 0.3s;
+        }
+        .clear-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="header-container">
+            <h2>Rokdi pinni Parshad</h2>
+            <div class="toggle-wrapper">
+                ਲਾਕ
+                <label class="switch">
+                    <input type="checkbox" id="lockToggle" onchange="toggleLock()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row"><label>ਪਹਿਲੀ ਪਰਚੀ -</label> <input type="number" id="p1" oninput="calculate()"></div>
+        <div class="row"><label>ਦੂਜੀ ਪਰਚੀ -</label> <input type="number" id="p2" oninput="calculate()"></div>
+        <div class="row"><label>ਤੀਜੀ ਪਰਚੀ -</label> <input type="number" id="p3" oninput="calculate()"></div>
+        <div class="row"><label>ਜੋੜ =</label> <span class="result-text" id="sum1">0</span></div>
+
+        <div class="extra-space-divider"></div>
+
+        <div class="row"><label>ਪਿਛਲਾ ਜੋੜ -</label> <span class="result-text" id="prevSum">0</span></div>
+        <div class="row"><label>ਚੌਥੀ ਪਰਚੀ -</label> <input type="number" id="p4" oninput="calculate()"></div>
+        <div class="row"><label>ਪੰਜਵੀਂ ਪਰਚੀ -</label> <input type="number" id="p5" oninput="calculate()"></div>
+        <div class="row"><label>ਕੁੱਲ ਜੋੜ -</label> <span class="result-text" id="sum2">0</span></div>
+
+        <div class="divider"></div>
+
+        <div class="detail-row">
+            <div class="row"><label>ਵੇਰਵਾ ਪੈਕਟ -</label> <input type="number" id="pkt" oninput="calculate()"></div>
+            <div class="fraction-container">
+                <div class="fraction">
+                    <span class="numerator" id="pktNum">0</span>
+                    <span class="denominator">20</span>
+                </div>
+                <div class="equals-result">= &nbsp; <span id="pktResultAns">0</span></div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="detail-row">
+            <div class="row"><label>ਵੇਰਵਾ ਸਿਰੋਪਾਓ -</label> <input type="number" id="sir" oninput="calculate()"></div>
+            <div class="fraction-container">
+                <div class="fraction">
+                    <span class="numerator" id="sirNum">0</span>
+                    <span class="denominator">151</span>
+                </div>
+                <div class="equals-result">= &nbsp; <span id="sirResultAns">0</span></div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grand-total-box">
+            <div class="grand-total-label">ਪੰਜਾਂ ਪਰਚਿਆਂ ਦਾ ਇਕੱਠਾ ਜੋੜ</div>
+            <div class="grand-total-value" id="grandTotal">0</div>
+        </div>
+
+        <button class="clear-btn" onclick="clearData()">ਸਾਰਾ ਡਾਟਾ ਕਲੀਅਰ ਕਰੋ</button>
+
+    </div>
+
+    <script>
+        window.onload = function() {
+            document.getElementById('p1').value = localStorage.getItem('p1') || '';
+            document.getElementById('p2').value = localStorage.getItem('p2') || '';
+            document.getElementById('p3').value = localStorage.getItem('p3') || '';
+            document.getElementById('p4').value = localStorage.getItem('p4') || '';
+            document.getElementById('p5').value = localStorage.getItem('p5') || '';
+            document.getElementById('pkt').value = localStorage.getItem('pkt') || '';
+            document.getElementById('sir').value = localStorage.getItem('sir') || '';
+            
+            let isLocked = localStorage.getItem('isLocked') === 'true';
+            document.getElementById('lockToggle').checked = isLocked;
+            toggleLock(); 
+            
+            calculate(); 
+        };
+
+        function calculate() {
+            let p1Input = document.getElementById('p1').value;
+            let p2Input = document.getElementById('p2').value;
+            let p3Input = document.getElementById('p3').value;
+            let p4Input = document.getElementById('p4').value;
+            let p5Input = document.getElementById('p5').value;
+            let pktInput = document.getElementById('pkt').value;
+            let sirInput = document.getElementById('sir').value;
+
+            localStorage.setItem('p1', p1Input);
+            localStorage.setItem('p2', p2Input);
+            localStorage.setItem('p3', p3Input);
+            localStorage.setItem('p4', p4Input);
+            localStorage.setItem('p5', p5Input);
+            localStorage.setItem('pkt', pktInput);
+            localStorage.setItem('sir', sirInput);
+
+            let v1 = Number(p1Input) || 0;
+            let v2 = Number(p2Input) || 0;
+            let v3 = Number(p3Input) || 0;
+            let v4 = Number(p4Input) || 0;
+            let v5 = Number(p5Input) || 0;
+            
+            let pkt = Number(pktInput) || 0;
+            let sir = Number(sirInput) || 0;
+
+            let sum1 = v1 + v2 + v3;
+            document.getElementById('sum1').innerText = sum1;
+
+            document.getElementById('prevSum').innerText = sum1;
+            let sum2 = sum1 + v4 + v5;
+            document.getElementById('sum2').innerText = sum2;
+
+            document.getElementById('grandTotal').innerText = sum2;
+
+            let pktDiv = Math.round(pkt / 20);
+            document.getElementById('pktNum').innerText = pkt;
+            document.getElementById('pktResultAns').innerText = pktDiv;
+
+            let sirDiv = Math.round(sir / 151);
+            document.getElementById('sirNum').innerText = sir;
+            document.getElementById('sirResultAns').innerText = sirDiv;
+        }
+
+        function toggleLock() {
+            let isLocked = document.getElementById('lockToggle').checked;
+            localStorage.setItem('isLocked', isLocked); 
+            
+            let inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.disabled = isLocked;
+            });
+        }
+
+        function clearData() {
+            let confirmClear = confirm("ਕੀ ਤੁਸੀਂ ਸੱਚਮੁੱਚ ਸਾਰਾ ਡਾਟਾ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?");
+            if (confirmClear) {
+                localStorage.clear();
+                
+                let inputs = document.querySelectorAll('input[type="number"]');
+                inputs.forEach(input => {
+                    input.value = '';
+                });
+
+                document.getElementById('lockToggle').checked = false;
+                toggleLock();
+
+                calculate();
+            }
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log('Service Worker Registered');
+            });
+        }
+    </script>
+</body>
+</html>
